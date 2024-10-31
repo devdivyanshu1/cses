@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+long long countSubarraysWithKDistinct(vector<int>& nums, int k) {
+    int left = 0;
+    unordered_map<int, int> freq;
+    long long count = 0;
+
+    for (int right = 0; right < nums.size(); right++) {
+        // Add nums[right] to the frequency map
+        freq[nums[right]]++;
+
+        // Ensure that the window has at most k distinct values
+        while (freq.size() > k) {
+            freq[nums[left]]--;
+            if (freq[nums[left]] == 0) {
+                freq.erase(nums[left]);
+            }
+            left++;
+        }
+        
+        // Count all subarrays ending at 'right' with at most k distinct elements
+        count += (right - left + 1);
+    }
+
+    return count;
+}
+
+int main() {
+    int n, k;
+    cin >> n >> k;
+    vector<int> nums(n);
+    for (int i = 0; i < n; i++) {
+        cin >> nums[i];
+    }
+
+    cout << countSubarraysWithKDistinct(nums, k) << endl;
+    return 0;
+}
